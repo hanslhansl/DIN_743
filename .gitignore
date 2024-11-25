@@ -5,6 +5,7 @@
 
 # custom
 *.sln
+*.pyproj
 *.vcxproj
 *.vcxproj.filters
 
