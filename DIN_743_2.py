@@ -1,5 +1,6 @@
 import math as m
 from abc import abstractmethod
+from dataclasses import dataclass
 from DIN_743_3 import *
 
 
@@ -13,22 +14,6 @@ class Kerbe:
 
     def D(self, d):
         return d + 2 * self.t
-    # @abstractmethod
-    # def beta_sigma_zd(self, d, **kwargs):
-    #     pass
-    # @abstractmethod
-    # def beta_sigma_b(self, d, **kwargs):
-    #     pass
-    # @abstractmethod
-    # def beta_tau(self, d, **kwargs):
-    #     pass
-    
-    # @abstractmethod
-    # def K_Fsigma(self, Rz, sigma_B_d_eff):
-    #     pass
-    # @abstractmethod
-    # def K_Ftau(self, Rz, sigma_B_d_eff):
-    #     pass
     pass
 
 
@@ -88,14 +73,16 @@ class ExperimentelleKerbwirkungszahlen(Kerbe):
             return 1 - 0.2 * m.log(alpha)
         raise NotImplementedError
 
+@dataclass
 class Passfeder(ExperimentelleKerbwirkungszahlen, K_F_nach_Welle_Nabe):
     """Tabelle 1"""
     umdrehungskerbe = False
+    d_BK = 40
 
-    def __init__(self, i : int):
-        self.d_BK = 40
-        self.i = i
-        assert i in (1, 2)
+    i : int
+
+    def __post_init__(self):
+        assert self.i in (1, 2)
         
     def beta_sigma_zd_d_BK(self, sigma_B_d: float, **kwargs):
         return (3 * (sigma_B_d / 1000)**0.38) * (1.15 if self.i == 2 else 1)
@@ -103,13 +90,12 @@ class Passfeder(ExperimentelleKerbwirkungszahlen, K_F_nach_Welle_Nabe):
         return self.beta_sigma_zd_d_BK(sigma_B_d)
     def beta_tau_d_BK(self, sigma_B_d: float, **kwargs):
         return (0.56 * 3 * (sigma_B_d / 1000)**0.38 + 0.1) * (1.15 if self.i == 2 else 1)
-
+    
+@dataclass
 class Presssitz(ExperimentelleKerbwirkungszahlen, K_F_nach_Welle_Nabe):
     """Tabelle 1"""
     umdrehungskerbe = True
-
-    def __init__(self):
-        self.d_BK = 40
+    d_BK = 40
 
     def beta_sigma_zd_d_BK(self, sigma_B_d: float, **kwargs):
         return 2.7 * (sigma_B_d / 1000)**0.43
@@ -124,7 +110,8 @@ class Presssitz(ExperimentelleKerbwirkungszahlen, K_F_nach_Welle_Nabe):
         return M_b / (m.pi / 32 * d**3)
     def sigma_t(self, M_t, d):
         return M_t / (m.pi / 16 * d**3)
-
+    
+@dataclass
 class Spitzkerbe(ExperimentelleKerbwirkungszahlen, K_F_nach_Formel):
     """Abschnitt 4.2.3"""
     umdrehungskerbe = True
@@ -132,8 +119,7 @@ class Spitzkerbe(ExperimentelleKerbwirkungszahlen, K_F_nach_Formel):
     d_BK = 15
     Rz_B = 20
 
-    def __init__(self, t):
-        self.t = t
+    t : float
 
     def beta_sigma_zd_d_BK(self, sigma_B_d: float, **kwargs):
         return 0.109 * sigma_B_d / 100 + 1.074
@@ -151,17 +137,19 @@ class Spitzkerbe(ExperimentelleKerbwirkungszahlen, K_F_nach_Formel):
     def sigma_t(self, M_t, d):
         assert 0.05 <= self.t/d <= 0.20
         return super().sigma_t(M_t, d)
-
+    
+@dataclass
 class UmlaufendeRechtecknut(ExperimentelleKerbwirkungszahlen, K_F_nach_Formel):
     """Abschnitt 4.2.4"""
     umdrehungskerbe = True
     d_BK = 30
     Rz_B = 20
 
-    def __init__(self, t, r):
+    t : float
+    r : float
+
+    def __post_init__(self):
         raise NotImplementedError
-        self.t = t
-        self.r = r
 
     def rho_s(self, sigma_S_d):
         return 10 ** -(0.514 + 0.00152 - sigma_S_d)
@@ -236,12 +224,13 @@ class AbsatzUndRundnut(BekannteFormzahl):
         return self._alpha(d, self.A_b(), self.B_b(), self.C_b(), self.z_b())
     def alpha_tau(self, d):
         return self._alpha(d, self.A_t(), self.B_t(), self.C_t(), self.z_t())
-
+    
+@dataclass
 class Rundnut(AbsatzUndRundnut):
     """Tabelle 2"""
-    def __init__(self, r, t):
-        self.r = r
-        self.t = t
+    
+    r : float
+    t : float
         
     def phi(self, d):
         if d / self.D(d) > 0.67 and self.r > 0:
@@ -282,13 +271,14 @@ class Rundnut(AbsatzUndRundnut):
         return 0
     def z_t(self):
         return 0
-
+    
+@dataclass
 class Absatz(AbsatzUndRundnut):
     """Tabelle 2"""
-    def __init__(self, r, t):
-        self.r = r
-        self.t = t
-        
+    
+    r : float
+    t : float
+
     def phi(self, d, **kwargs):
         if d / self.D(d) > 0.67 and self.r > 0:
             return 1 / (4 * m.sqrt(self.t / self.r) + 2)
@@ -328,22 +318,22 @@ class Absatz(AbsatzUndRundnut):
         return 3
     def z_t(self):
         return 2
-
+    
+@dataclass
 class Freistrich(Absatz):
-    def __init__(self, r, t, D):
-        self.r = r
-        self.t = t
-        self.D = D
+    r : float
+    t : float
+    D : float
 
     def D(self, d):
         return self.D
-
+    
+@dataclass
 class Querbohrung(BekannteFormzahl):
     """Abschnitt 5.2.3 """
     umdrehungskerbe = False
-
-    def __init__(self, r):
-        self.r = r
+    
+    r : float
 
     def alpha_sigma_zd(self, d):
         return 3 - (2 * self.r / d)

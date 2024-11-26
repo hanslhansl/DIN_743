@@ -74,3 +74,4 @@ Werkstoff._30CrNiMo8 = Werkstoff(Werkstoff.Art.vergüteterStahl, 1030, 850, 16, 
 Werkstoff._34CrNiMo6 = Werkstoff(Werkstoff.Art.vergüteterStahl, 1200, 1000, 16, 16)
 
 Werkstoff._32CrAlMo7_10 = Werkstoff(Werkstoff.Art.Nitrierstahl, 800, 600, 100, 100)
+Werkstoff._34CrAlMo5_10 = Werkstoff(Werkstoff.Art.Nitrierstahl, 800, 700, 100, 100)
