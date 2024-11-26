@@ -22,6 +22,7 @@ class HiddenPrints:
             sys.stdout = self._original_stdout
 
 
+
 class Festigkeit:
     def __init__(self, fall, werkstoff : Werkstoff, kerbe : Kerbe, d, d_eff,
     F_zdm, F_zda, M_bm, M_ba, M_tm, M_ta,
@@ -30,53 +31,47 @@ class Festigkeit:
         Im Druckbereich sind sigma_zdm und sigma_bm negativ
         - d: Bauteildurchmesser im Kerbquerschnitt 
         - d_eff: für die Wärmebehandlung maßgebender Durchmesser
+
+        Werte die von einem if not hasattr umgeben sind können mit **kwargs überschrieben werden
         """
+        
+        assert(fall in (1, 2))
+
+        self.fall = fall
+        self.werkstoff = werkstoff
+        self.kerbe = kerbe
+        self.d = d
+        self.d_eff = d_eff
+        self.Rz = Rz
+        self.K_A = K_A
+        self.K_S = K_S
+        self.K_V = K_V
+        self.harte_randschicht = harte_randschicht
+
 
         with HiddenPrints(not output):
-            self.fall = fall
-            assert(self.fall in (1, 2))
-    
-            self.werkstoff = werkstoff
-            self.kerbe = kerbe
-            self.d = d
-            self.d_eff = d_eff
-            self.Rz = Rz
-            self.K_A = K_A
-            self.K_S = K_S
-            self.K_V = K_V
-            self.harte_randschicht = harte_randschicht
-            print(f"werkstoff = {self.werkstoff}")
-            print(f"kerbe = {self.kerbe}")
-            print(f"d = {self.d}")
-            print(f"d_eff = {self.d_eff}")
-            print(f"Rz = {self.Rz}")
-            print(f"K_A = {self.K_A}")
-            print(f"K_S = {self.K_S}")
-            print(f"K_V = {self.K_V}")
-            print(f"harte_randschicht = {self.harte_randschicht}")
+            [print(f"{key} = {value}") for key, value in vars(self).items()]
+            self.__dict__.update(kwargs)
 
             def _max(m, a):
                 return m + a if a >= 0 else m - a
             self.sigma_zdm = self.kerbe.sigma_zd(F_zdm, self.d)
-            self.sigma_zda = self.kerbe.sigma_zd(F_zda, self.d)
-            self.sigma_zdmax = self.K_S * _max(self.sigma_zdm, self.sigma_zda)
-            self.sigma_zda *= self.K_A
+            self.sigma_zda = self.K_A * self.kerbe.sigma_zd(F_zda, self.d)
+            self.sigma_zdmax = self.K_S * _max(self.sigma_zdm, self.kerbe.sigma_zd(F_zda, self.d))
             print(f"sigma_zdm = {self.sigma_zdm}")
             print(f"sigma_zda = {self.sigma_zda}")
             print(f"sigma_zdmax = {self.sigma_zdmax}")
 
             self.sigma_bm = self.kerbe.sigma_b(M_bm, self.d)
-            self.sigma_ba = self.kerbe.sigma_b(M_ba, self.d)
-            self.sigma_bmax = self.K_S * _max(self.sigma_bm, self.sigma_ba)
-            self.sigma_ba *= self.K_A
+            self.sigma_ba = self.K_A * self.kerbe.sigma_b(M_ba, self.d)
+            self.sigma_bmax = self.K_S * _max(self.sigma_bm, self.kerbe.sigma_b(M_ba, self.d))
             print(f"sigma_bm = {self.sigma_bm}")
             print(f"sigma_ba = {self.sigma_ba}")
             print(f"sigma_bmax = {self.sigma_bmax}")
 
             self.tau_tm = self.kerbe.tau_t(M_tm, self.d)
-            self.tau_ta = self.kerbe.tau_t(M_ta, self.d)
-            self.tau_tmax = self.K_S * _max(self.tau_tm, self.tau_ta)
-            self.tau_ta *= self.K_A
+            self.tau_ta = self.K_A * self.kerbe.tau_t(M_ta, self.d)
+            self.tau_tmax = self.K_S * _max(self.tau_tm, self.kerbe.tau_t(M_ta, self.d))
             print(f"tau_tm = {self.tau_tm}")
             print(f"tau_ta = {self.tau_ta}")
             print(f"tau_tmax = {self.tau_tmax}")
@@ -93,14 +88,19 @@ class Festigkeit:
             print(f"sigma_bW_d_B = {self.sigma_bW_d_B}")
             print(f"tau_tW_d_B = {self.tau_tW_d_B}")
 
-            self.K_1B_d_eff = K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=True)
-            self.K_1S_d_eff = K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=False)
+            if not hasattr(self, "K_1B_d_eff"):
+                self.K_1B_d_eff = K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=True)
+            if not hasattr(self, "K_1S_d_eff"):
+                self.K_1S_d_eff = K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=False)
             print(f"K_1B_d_eff = {self.K_1B_d_eff}")
             print(f"K_1S_d_eff = {self.K_1S_d_eff}")
 
-            self.K_2_d_zd = K_2_zd(d=self.d)
-            self.K_2_d_b = K_2_b(d=self.d)
-            self.K_2_d_t = K_2_t(d=self.d)
+            if not hasattr(self, "K_2_d_zd"):
+                self.K_2_d_zd = K_2_zd(d=self.d)
+            if not hasattr(self, "K_2_d_b"):
+                self.K_2_d_b = K_2_b(d=self.d)
+            if not hasattr(self, "K_2_d_t"):
+                self.K_2_d_t = K_2_t(d=self.d)
             print(f"K_2_d_zd = {self.K_2_d_zd}")
             print(f"K_2_d_b = {self.K_2_d_b}")
             print(f"K_2_d_t = {self.K_2_d_t}")
@@ -115,22 +115,30 @@ class Festigkeit:
             self.sigma_S_d = self.sigma_S_d_B * self.K_1S_d_eff
             print(f"sigma_S_d = {self.sigma_S_d}")
 
-            self.K_Fsigma = self.kerbe.K_Fsigma(Rz=self.Rz, sigma_B_d_eff=self.sigma_B_d_eff)
-            self.K_Ftau = self.kerbe.K_Ftau(Rz=self.Rz, sigma_B_d_eff=self.sigma_B_d_eff)
+            if not hasattr(self, "K_Fsigma"):
+                self.K_Fsigma = self.kerbe.K_Fsigma(Rz=self.Rz, sigma_B_d_eff=self.sigma_B_d_eff)
+            if not hasattr(self, "K_Ftau"):
+                self.K_Ftau = self.kerbe.K_Ftau(Rz=self.Rz, sigma_B_d_eff=self.sigma_B_d_eff)
             print(f"K_Fsigma = {self.K_Fsigma}")
             print(f"K_Ftau = {self.K_Ftau}")
 
-            self.beta_sigma_zd = kerbe.beta_sigma_zd(d=self.d, sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
-            self.beta_sigma_b = kerbe.beta_sigma_b(d=self.d, sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
-            self.beta_tau = kerbe.beta_tau(d=self.d, sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
+            if not hasattr(self, "beta_sigma_zd"):
+                self.beta_sigma_zd = kerbe.beta_sigma_zd(d=self.d, sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
+            if not hasattr(self, "beta_sigma_b"):
+                self.beta_sigma_b = kerbe.beta_sigma_b(d=self.d, sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
+            if not hasattr(self, "beta_tau"):
+                self.beta_tau = kerbe.beta_tau(d=self.d, sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
             print(f"beta_sigma_zd = {self.beta_sigma_zd}")
             print(f"beta_sigma_b = {self.beta_sigma_b}")
             print(f"beta_tau = {self.beta_tau}")
   
             # Glg 8, 9
-            self.K_sigma_zd = (self.beta_sigma_zd / self.K_2_d_zd + 1 / self.K_Fsigma - 1) / self.K_V
-            self.K_sigma_b = (self.beta_sigma_b / self.K_2_d_b + 1 / self.K_Fsigma - 1) / self.K_V
-            self.K_tau = (self.beta_tau / self.K_2_d_t + 1 / self.K_Ftau - 1) / self.K_V
+            if not hasattr(self, "K_sigma_zd"):
+                self.K_sigma_zd = (self.beta_sigma_zd / self.K_2_d_zd + 1 / self.K_Fsigma - 1) / self.K_V
+            if not hasattr(self, "K_sigma_b"):
+                self.K_sigma_b = (self.beta_sigma_b / self.K_2_d_b + 1 / self.K_Fsigma - 1) / self.K_V
+            if not hasattr(self, "K_tau"):
+                self.K_tau = (self.beta_tau / self.K_2_d_t + 1 / self.K_Ftau - 1) / self.K_V
             print(f"K_sigma_zd = {self.K_sigma_zd}")
             print(f"K_sigma_b = {self.K_sigma_b}")
             print(f"K_tau = {self.K_tau}")
@@ -178,14 +186,12 @@ class Festigkeit:
             print(f"gamma_Ft = {self.gamma_Ft}")
 
             # K_2F, Tabelle 3, vernachlässigen der Hohlwelle
-            if self.harte_randschicht:
+            if not hasattr(self, "K_2Fzd"):
                 self.K_2Fzd = 1.0
-                self.K_2Fb = 1.0
-                self.K_2Ft = 1.0
-            else:
-                self.K_2Fzd = 1.0
-                self.K_2Fb = 1.2
-                self.K_2Ft = 1.2
+            if not hasattr(self, "K_2Fb"):
+                self.K_2Fb = 1.0 if self.harte_randschicht else 1.2
+            if not hasattr(self, "K_2Ft"):
+                self.K_2Ft = 1.0 if self.harte_randschicht else 1.2
             print(f"K_2Fzd = {self.K_2Fzd}")
             print(f"K_2Fb = {self.K_2Fb}")
             print(f"K_2Ft = {self.K_2Ft}")
