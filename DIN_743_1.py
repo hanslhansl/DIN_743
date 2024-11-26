@@ -263,6 +263,9 @@ class Festigkeit:
 
             print()
         return
+    
+    pass
+
 
 if __name__ == "__main__":
 
@@ -319,6 +322,11 @@ if __name__ == "__main__":
         K_S = 2.5,
         K_V = 1,
         harte_randschicht = False)
+
+
+
+
+
 
 
     sys.exit()
