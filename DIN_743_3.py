@@ -38,12 +38,12 @@ class Werkstoff:
         raise NotImplementedError
     
     
+Werkstoff.S185 = Werkstoff(Werkstoff.Art.Baustahl, 290, 185, 100, 16)
 Werkstoff.S235 = Werkstoff(Werkstoff.Art.Baustahl, 360, 235, 100, 16)
 Werkstoff.S275 = Werkstoff(Werkstoff.Art.Baustahl, 410, 275, 100, 16)
 Werkstoff.S355 = Werkstoff(Werkstoff.Art.Baustahl, 470, 355, 100, 16)
 Werkstoff.S450 = Werkstoff(Werkstoff.Art.Baustahl, 550, 450, 100, 16)
 Werkstoff.S500 = Werkstoff(Werkstoff.Art.Baustahl, 580, 500, 100, 16)
-Werkstoff.S185 = Werkstoff(Werkstoff.Art.Baustahl, 290, 185, 100, 16)
 Werkstoff.E295 = Werkstoff(Werkstoff.Art.Baustahl, 470, 295, 100, 16)
 Werkstoff.E335 = Werkstoff(Werkstoff.Art.Baustahl, 570, 335, 100, 16)
 Werkstoff.E360 = Werkstoff(Werkstoff.Art.Baustahl, 670, 360, 100, 16)

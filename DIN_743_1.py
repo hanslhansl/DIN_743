@@ -275,9 +275,32 @@ class Festigkeit:
 
 if __name__ == "__main__":
 
+
+    print("Passfeder Lamellenkupplung")
+    lamellenkupplung = Festigkeit(fall = 2,
+        werkstoff = Werkstoff.S450,
+        kerbe = Passfeder(2),
+        d = 30,
+        d_eff = 30,
+        F_zdm = 0,
+        F_zda = 0,
+        M_bm = 0,
+        M_ba = 0,
+        M_tm = 535.93,
+        M_ta = 0,
+        Rz = 16,
+        K_A = 1.75,
+        K_S = 2.5,
+        K_V = 1,
+        harte_randschicht = False)
+    l = lamellenkupplung.werkstoff.sigma_S_d_B * 0.9 * (7 - 4) * (35) * lamellenkupplung.d / 2 * 2 * 0.75 / 1000
+    r = 535.93 * 1.75
+    print(f"{l} >= {r}")
+    assert l >= r
+
     print("Passfeder Ritzel")
-    Festigkeit(fall = 2,
-        werkstoff = Werkstoff.C10E  ,
+    ritzel = Festigkeit(fall = 2,
+        werkstoff = lamellenkupplung.werkstoff,
         kerbe = Passfeder(1),
         d = 50,
         d_eff = 50,
@@ -292,9 +315,13 @@ if __name__ == "__main__":
         K_S = 2.5,
         K_V = 1,
         harte_randschicht = False)
+    l = ritzel.werkstoff.sigma_S_d_B * 0.9 * (9 - 5.5) * (40) * ritzel.d / 2 * 1 * 1 / 1000
+    r = 535.93 * 1.75
+    print(f"{l} >= {r}")
+    assert l >= r
 
     print("Passfeder Rad")
-    Festigkeit(fall = 2,
+    rad = Festigkeit(fall = 2,
         werkstoff = Werkstoff.S500,
         kerbe = Passfeder(2),
         d = 70,
@@ -310,11 +337,15 @@ if __name__ == "__main__":
         K_S = 2.5,
         K_V = 1,
         harte_randschicht = False)
+    l = rad.werkstoff.sigma_S_d_B * 0.9 * (12 - 7.5) * (48.3) * rad.d / 2 * 2 * 0.75 / 1000
+    r = 2933.52 * 1.75
+    print(f"{l} >= {r}")
+    assert l >= r
 
     print("Passfeder drehstarre Kupplung")
-    Festigkeit(fall = 2,
-        werkstoff = Werkstoff.S500,
-        kerbe = Passfeder(1),
+    drehstarr = Festigkeit(fall = 2,
+        werkstoff = rad.werkstoff,
+        kerbe = Passfeder(2),
         d = 55,
         d_eff = 55,
         F_zdm = 0, 
@@ -328,6 +359,10 @@ if __name__ == "__main__":
         K_S = 2.5,
         K_V = 1,
         harte_randschicht = False)
+    l = drehstarr.werkstoff.sigma_S_d_B * 0.9 * (10 - 6) * 70 * drehstarr.d / 2 * 2 * 0.75 / 1000
+    r = 2933.52 * 1.75
+    print(f"{l} >= {r}")
+    assert l >= r
 
 
 
