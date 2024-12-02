@@ -329,7 +329,7 @@ if __name__ == "__main__":
         F_zdm = 0, 
         F_zda = 0, 
         M_bm = 0,
-        M_ba = 720.384, 
+        M_ba = 294.9, 
         M_tm = 2933.52,
         M_ta = 0, 
         Rz = 16,
