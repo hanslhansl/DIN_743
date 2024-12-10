@@ -3,48 +3,48 @@ from DIN_743_2 import *
 from DIN_743_3 import *
 
 
-
-S_min = 1.2
-print(f"S_min = {S_min}")
-print()
-
 def enable_virtual_terminal_processing():
     import ctypes
     from ctypes import wintypes
 
-    # Konstanten aus der Windows-API
-    STD_OUTPUT_HANDLE = -11
-    ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004
-    INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
+    try:
+        # Konstanten aus der Windows-API
+        STD_OUTPUT_HANDLE = -11
+        ENABLE_VIRTUAL_TERMINAL_PROCESSING = 0x0004
+        INVALID_HANDLE_VALUE = ctypes.c_void_p(-1).value
 
-    # Funktionen aus der Windows-API laden
-    kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
-    GetStdHandle = kernel32.GetStdHandle
-    GetStdHandle.argtypes = [wintypes.DWORD]
-    GetStdHandle.restype = wintypes.HANDLE
+        # Funktionen aus der Windows-API laden
+        kernel32 = ctypes.WinDLL('kernel32', use_last_error=True)
+        GetStdHandle = kernel32.GetStdHandle
+        GetStdHandle.argtypes = [wintypes.DWORD]
+        GetStdHandle.restype = wintypes.HANDLE
 
-    GetConsoleMode = kernel32.GetConsoleMode
-    GetConsoleMode.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
-    GetConsoleMode.restype = wintypes.BOOL
+        GetConsoleMode = kernel32.GetConsoleMode
+        GetConsoleMode.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
+        GetConsoleMode.restype = wintypes.BOOL
 
-    SetConsoleMode = kernel32.SetConsoleMode
-    SetConsoleMode.argtypes = [wintypes.HANDLE, wintypes.DWORD]
-    SetConsoleMode.restype = wintypes.BOOL
+        SetConsoleMode = kernel32.SetConsoleMode
+        SetConsoleMode.argtypes = [wintypes.HANDLE, wintypes.DWORD]
+        SetConsoleMode.restype = wintypes.BOOL
 
-    # Handle für die Standardausgabe abrufen
-    hOut = GetStdHandle(STD_OUTPUT_HANDLE)
-    if hOut == INVALID_HANDLE_VALUE:
-        raise ctypes.WinError(ctypes.get_last_error())
+        # Handle für die Standardausgabe abrufen
+        hOut = GetStdHandle(STD_OUTPUT_HANDLE)
+        if hOut == INVALID_HANDLE_VALUE:
+            raise ctypes.WinError(ctypes.get_last_error())
 
-    # Aktuellen Konsolenmodus abrufen
-    dwMode = wintypes.DWORD()
-    if not GetConsoleMode(hOut, ctypes.byref(dwMode)):
-        raise ctypes.WinError(ctypes.get_last_error())
+        # Aktuellen Konsolenmodus abrufen
+        dwMode = wintypes.DWORD()
+        if not GetConsoleMode(hOut, ctypes.byref(dwMode)):
+            raise ctypes.WinError(ctypes.get_last_error())
 
-    # Virtual Terminal Processing aktivieren
-    dwMode.value |= ENABLE_VIRTUAL_TERMINAL_PROCESSING
-    if not SetConsoleMode(hOut, dwMode):
-        raise ctypes.WinError(ctypes.get_last_error())
+        # Virtual Terminal Processing aktivieren
+        dwMode.value |= ENABLE_VIRTUAL_TERMINAL_PROCESSING
+        if not SetConsoleMode(hOut, dwMode):
+            raise ctypes.WinError(ctypes.get_last_error())
+
+        print("Virtual Terminal Processing wurde aktiviert.")
+    except WindowsError as e:
+        print(f"Fehler: {e}")
 
 
 class HiddenPrints:
@@ -316,6 +316,11 @@ class Festigkeit:
 
 if __name__ == "__main__":
     enable_virtual_terminal_processing()
+
+    S_min = 1.2
+    print(f"S_min = {S_min}")
+    print()
+
     werkstoff = Werkstoff.S500
 
 
@@ -341,8 +346,7 @@ if __name__ == "__main__":
 
 
 
-
-    #sys.exit()
+    sys.exit()
     print("Passfeder Lamellenkupplung")
     lamellenkupplung = Festigkeit(fall = 2,
         werkstoff = werkstoff,
