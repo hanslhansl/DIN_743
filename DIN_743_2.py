@@ -4,16 +4,21 @@ from dataclasses import dataclass
 from DIN_743_3 import *
 
 
-class Kerbe:
-    def sigma_zd(self, F_zd, d):
-        return F_zd / (m.pi / 4 * d**2)
-    def sigma_b(self, M_b, d):
-        return M_b / (m.pi / 32 * d**3) * 1000
-    def tau_t(self, M_t, d):
-        return M_t / (m.pi / 16 * d**3) * 1000
 
-    def D(self, d):
-        return d + 2 * self.t
+@dataclass
+class Kerbe:
+    d : float
+
+    def sigma_zd(self, F_zd):
+        return F_zd / (m.pi / 4 * self.d**2)
+    def sigma_b(self, M_b):
+        return M_b / (m.pi / 32 * self.d**3) * 1000
+    def tau_t(self, M_t):
+        return M_t / (m.pi / 16 * self.d**3) * 1000
+
+    @property
+    def D(self):
+        return self.d + 2 * self.t
     pass
 
 
@@ -41,37 +46,31 @@ class K_F_nach_Formel:
 
 
 class ExperimentelleKerbwirkungszahlen(Kerbe):
-    def beta_sigma_zd(self, d, **kwargs):
+    def beta_sigma_zd(self, **kwargs):
         beta_d_BK = self.beta_sigma_zd_d_BK(**kwargs)
-        K_3_d = self.K_3(d, beta_d_BK)
-        K_3_d_BK = self.K_3(self.d_BK, beta_d_BK)
-        print(f"beta_sigma_zd_d_BK = {beta_d_BK}")
-        print(f"K_3_zd_d_BK = {K_3_d_BK}")
-        print(f"K_3_zd_d = {K_3_d}")
+        K_3_d = K_3(self.d, beta_d_BK)
+        K_3_d_BK = K_3(self.d_BK, beta_d_BK)
+        print(f"\tbeta_sigma_zd_d_BK = {beta_d_BK}")
+        print(f"\tK_3_zd_d_BK = {K_3_d_BK}")
+        print(f"\tK_3_zd_d = {K_3_d}")
         return beta_d_BK * K_3_d_BK / K_3_d
-    def beta_sigma_b(self, d, **kwargs):
+    def beta_sigma_b(self, **kwargs):
         beta_d_BK = self.beta_sigma_b_d_BK(**kwargs)
-        K_3_d = self.K_3(d, beta_d_BK) 
-        K_3_d_BK = self.K_3(self.d_BK, beta_d_BK)
-        print(f"beta_sigma_b_d_BK = {beta_d_BK}")
-        print(f"K_3_b_d_BK = {K_3_d_BK}")
-        print(f"K_3_b_d = {K_3_d}")
+        K_3_d = K_3(self.d, beta_d_BK) 
+        K_3_d_BK = K_3(self.d_BK, beta_d_BK)
+        print(f"\tbeta_sigma_b_d_BK = {beta_d_BK}")
+        print(f"\tK_3_b_d_BK = {K_3_d_BK}")
+        print(f"\tK_3_b_d = {K_3_d}")
         return beta_d_BK * K_3_d_BK / K_3_d
-    def beta_tau(self, d, **kwargs):
+    def beta_tau(self, **kwargs):
         beta_d_BK = self.beta_tau_d_BK(**kwargs)
-        K_3_d = self.K_3(d, beta_d_BK)
-        K_3_d_BK = self.K_3(self.d_BK, beta_d_BK)
-        print(f"beta_tau_d_BK = {beta_d_BK}")
-        print(f"K_3_t_d_BK = {K_3_d_BK}")
-        print(f"K_3_t_d = {K_3_d}")
+        K_3_d = K_3(self.d, beta_d_BK)
+        K_3_d_BK = K_3(self.d_BK, beta_d_BK)
+        print(f"\tbeta_tau_d_BK = {beta_d_BK}")
+        print(f"\tK_3_t_d_BK = {K_3_d_BK}")
+        print(f"\tK_3_t_d = {K_3_d}")
         return beta_d_BK * K_3_d_BK / K_3_d
 
-    def K_3(self, d, alpha):
-        if 7.5 <= d < 150:
-            return 1 - 0.2 * m.log(alpha, 10) * m.log(d / 7.5, 10) / m.log(20, 10)
-        elif d >= 150:
-            return 1 - 0.2 * m.log(alpha)
-        raise NotImplementedError
 
 @dataclass
 class Passfeder(ExperimentelleKerbwirkungszahlen, K_F_nach_Welle_Nabe):
@@ -104,12 +103,12 @@ class Presssitz(ExperimentelleKerbwirkungszahlen, K_F_nach_Welle_Nabe):
     def beta_tau_d_BK(self, sigma_B_d: float, **kwargs):
         return 0.65 * self.beta_sigma_d_BK(sigma_B_d)
 
-    def sigma_zd(self, F_zd, d):
-        return F_zd / (m.pi / 4 * d**2)
-    def sigma_b(self, M_b, d):
-        return M_b / (m.pi / 32 * d**3)
-    def sigma_t(self, M_t, d):
-        return M_t / (m.pi / 16 * d**3)
+    def sigma_zd(self, F_zd):
+        return F_zd / (m.pi / 4 * self.d**2)
+    def sigma_b(self, M_b):
+        return M_b / (m.pi / 32 * self.d**3)
+    def sigma_t(self, M_t):
+        return M_t / (m.pi / 16 * self.d**3)
     
 @dataclass
 class Spitzkerbe(ExperimentelleKerbwirkungszahlen, K_F_nach_Formel):
@@ -128,15 +127,15 @@ class Spitzkerbe(ExperimentelleKerbwirkungszahlen, K_F_nach_Formel):
     def beta_tau_d_BK(self, sigma_B_d: float, **kwargs):
         return 0.8 * self.beta_sigma_b_d_BK(sigma_B_d)
 
-    def sigma_zd(self, F_zd, d):
-        assert 0.05 <= self.t/d <= 0.20
-        return super().sigma_zd(F_zd, d)
-    def sigma_b(self, M_b, d):
-        assert 0.05 <= self.t/d <= 0.20
-        return super().sigma_b(M_b, d)
-    def sigma_t(self, M_t, d):
-        assert 0.05 <= self.t/d <= 0.20
-        return super().sigma_t(M_t, d)
+    def sigma_zd(self, F_zd):
+        assert 0.05 <= self.t/self.d <= 0.20
+        return super().sigma_zd(F_zd, self.d)
+    def sigma_b(self, M_b):
+        assert 0.05 <= self.t/self.d <= 0.20
+        return super().sigma_b(M_b, self.d)
+    def sigma_t(self, M_t):
+        assert 0.05 <= self.t/self.d <= 0.20
+        return super().sigma_t(M_t, self.d)
     
 @dataclass
 class UmlaufendeRechtecknut(ExperimentelleKerbwirkungszahlen, K_F_nach_Formel):
@@ -167,42 +166,42 @@ class UmlaufendeRechtecknut(ExperimentelleKerbwirkungszahlen, K_F_nach_Formel):
 
 class BekannteFormzahl(Kerbe, K_F_nach_Formel):
     """4.3.1"""
-    def beta_sigma_zd(self, d, **kwargs):
-        alpha = self.alpha_sigma_zd(d=d)
-        n = self.n_zd(d=d, **kwargs)
-        print(f"alpha_sigma_zd = {alpha}")
-        print(f"n_zd = {n}")
+    def beta_sigma_zd(self, **kwargs):
+        alpha = self.alpha_sigma_zd()
+        n = self.n_zd(**kwargs)
+        print(f"\talpha_sigma_zd = {alpha}")
+        print(f"\tn_zd = {n}")
         return alpha / n
-    def beta_sigma_b(self, d, **kwargs):
-        alpha = self.alpha_sigma_b(d=d)
-        n = self.n_b(d=d, **kwargs)
-        print(f"alpha_sigma_b = {alpha}")
-        print(f"n_b = {n}")
+    def beta_sigma_b(self, **kwargs):
+        alpha = self.alpha_sigma_b()
+        n = self.n_b(**kwargs)
+        print(f"\talpha_sigma_b = {alpha}")
+        print(f"\tn_b = {n}")
         return alpha / n
-    def beta_tau(self, d, **kwargs):
-        alpha = self.alpha_tau(d=d)
-        n = self.n_t(d=d, **kwargs)
-        print(f"alpha_tau = {alpha}")
-        print(f"n_t = {n}")
+    def beta_tau(self, **kwargs):
+        alpha = self.alpha_tau()
+        n = self.n_t(**kwargs)
+        print(f"\talpha_tau = {alpha}")
+        print(f"\tn_t = {n}")
         return alpha / n
     
     def n_zd(self, sigma_S_d, harte_randschicht, **kwargs):
         G_s = self.G_zd_s(**kwargs)
-        print(f"G_zd_s = {G_s}")
+        print(f"\tG_zd_s = {G_s}")
         if harte_randschicht:
             return 1 + m.sqrt(G_s) * 10 ** -0.7
         else:
             return 1 + m.sqrt(G_s) * 10 ** -(0.33 + sigma_S_d / 712)
     def n_b(self, sigma_S_d, harte_randschicht, **kwargs):
         G_s = self.G_b_s(**kwargs)
-        print(f"G_b_s = {G_s}")
+        print(f"\tG_b_s = {G_s}")
         if harte_randschicht:
             return 1 + m.sqrt(G_s) * 10 ** -0.7
         else:
             return 1 + m.sqrt(G_s) * 10 ** -(0.33 + sigma_S_d / 712)
     def n_t(self, sigma_S_d, harte_randschicht, **kwargs):
         G_s = self.G_t_s(**kwargs)
-        print(f"G_t_s = {G_s}")
+        print(f"\tG_t_s = {G_s}")
         if harte_randschicht:
             return 1 + m.sqrt(G_s) * 10 ** -0.7
         else:
@@ -211,19 +210,18 @@ class BekannteFormzahl(Kerbe, K_F_nach_Formel):
 class AbsatzUndRundnut(BekannteFormzahl):
     umdrehungskerbe = True
 
-    def _alpha(self, d, A, B, C, z):
-        D = self.D(d)
-        alpha = 1 + 1 / m.sqrt(A * self.r / self.t + 2 * B * self.r / d * (1 + 2 * self.r / d)**2 + C * (self.r / self.t)**z * d / D)
+    def _alpha(self, A, B, C, z):
+        alpha = 1 + 1 / m.sqrt(A * self.r / self.t + 2 * B * self.r / self.d * (1 + 2 * self.r / self.d)**2 + C * (self.r / self.t)**z * self.d / self.D)
         assert self.r / self.t >= 0.03
-        assert d / D <= 0.98
+        assert self.d / self.D <= 0.98
         assert alpha <= 6
         return alpha
-    def alpha_sigma_zd(self, d):
-        return self._alpha(d, self.A_zd(), self.B_zd(), self.C_zd(), self.z_zd())
-    def alpha_sigma_b(self, d):
-        return self._alpha(d, self.A_b(), self.B_b(), self.C_b(), self.z_b())
-    def alpha_tau(self, d):
-        return self._alpha(d, self.A_t(), self.B_t(), self.C_t(), self.z_t())
+    def alpha_sigma_zd(self):
+        return self._alpha(self.A_zd(), self.B_zd(), self.C_zd(), self.z_zd())
+    def alpha_sigma_b(self):
+        return self._alpha(self.A_b(), self.B_b(), self.C_b(), self.z_b())
+    def alpha_tau(self):
+        return self._alpha(self.A_t(), self.B_t(), self.C_t(), self.z_t())
     
 @dataclass
 class Rundnut(AbsatzUndRundnut):
@@ -232,8 +230,8 @@ class Rundnut(AbsatzUndRundnut):
     r : float
     t : float
         
-    def phi(self, d):
-        if d / self.D(d) > 0.67 and self.r > 0:
+    def phi(self):
+        if self.d / self.D(self.d) > 0.67 and self.r > 0:
             return 1 / (4 * m.sqrt(self.t / self.r) + 2)
         return 0
 
@@ -279,8 +277,8 @@ class Absatz(AbsatzUndRundnut):
     r : float
     t : float
 
-    def phi(self, d, **kwargs):
-        if d / self.D(d) > 0.67 and self.r > 0:
+    def phi(self, **kwargs):
+        if self.d / self.D > 0.67 and self.r > 0:
             return 1 / (4 * m.sqrt(self.t / self.r) + 2)
         return 0
 
@@ -321,12 +319,8 @@ class Absatz(AbsatzUndRundnut):
     
 @dataclass
 class Freistrich(Absatz):
-    r : float
-    t : float
-    D : float
+    pass
 
-    def D(self, d):
-        return self.D
     
 @dataclass
 class Querbohrung(BekannteFormzahl):
@@ -335,26 +329,26 @@ class Querbohrung(BekannteFormzahl):
     
     r : float
 
-    def alpha_sigma_zd(self, d):
-        return 3 - (2 * self.r / d)
-    def alpha_sigma_b(self, d):
-        return 3 + 1.4 * (2 * self.r / d) - 2.8 * m.sqrt(2 * self.r / d)
-    def alpha_tau(self, d):
-        return 2.023 - 1.125 * m.sqrt(2 * self.r / d)
+    def alpha_sigma_zd(self):
+        return 3 - (2 * self.r / self.d)
+    def alpha_sigma_b(self):
+        return 3 + 1.4 * (2 * self.r / self.d) - 2.8 * m.sqrt(2 * self.r / self.d)
+    def alpha_tau(self):
+        return 2.023 - 1.125 * m.sqrt(2 * self.r / self.d)
 
     def G_zd_s(self, **kwargs):
         return 2.3 / self.r
-    def G_b_s(self, d, **kwargs):
-        return 2.3 / self.r + 2 / d
-    def G_t_s(self, d, **kwargs):
-        return 1.15 / self.r + 2 / d
+    def G_b_s(self, **kwargs):
+        return 2.3 / self.r + 2 / self.d
+    def G_t_s(self, **kwargs):
+        return 1.15 / self.r + 2 / self.d
 
-    def sigma_zd(self, F_zd, d):
-        return F_zd / (m.pi * d**2 / 4 - 2 * self.r * d)
-    def sigma_b(self, M_b, d):
-        return M_b / (m.pi * d**3 / 32 - self.r * d**2 / 3) * 1000
-    def tau_t(self, M_t, d):
-        return M_t / (m.pi * d**3 / 16 - self.r * d**2 / 3) * 1000
+    def sigma_zd(self, F_zd):
+        return F_zd / (m.pi * self.d**2 / 4 - 2 * self.r * self.d)
+    def sigma_b(self, M_b):
+        return M_b / (m.pi * self.d**3 / 32 - self.r * self.d**2 / 3) * 1000
+    def tau_t(self, M_t):
+        return M_t / (m.pi * self.d**3 / 16 - self.r * self.d**2 / 3) * 1000
 
 
 def K_1(werkstoff: Werkstoff, d_eff, zugfestigkeit : bool):
@@ -419,3 +413,9 @@ def K_2_t(d):
     """Glg 16"""
     return K_2_b(d)
 
+def K_3(d, alpha):
+    if 7.5 <= d < 150:
+        return 1 - 0.2 * m.log(alpha, 10) * m.log(d / 7.5, 10) / m.log(20, 10)
+    elif d >= 150:
+        return 1 - 0.2 * m.log(alpha)
+    raise NotImplementedError
