@@ -120,12 +120,22 @@ class Festigkeit:
             print(f"σ_B(d_B) = {self.sigma_B_d_B}")
             print(f"σ_S(d_B) = {self.sigma_S_d_B}")
 
+            zda = self.sigma_zda != 0
+            ba = self.sigma_ba != 0
+            ta = self.tau_ta != 0
+            zdmax = self.sigma_zdmax != 0
+            bmax = self.sigma_bmax != 0
+            tmax = self.tau_tmax != 0
+
             self.sigma_zdW_d_B = self.werkstoff.sigma_zdW_d_B
             self.sigma_bW_d_B = self.werkstoff.sigma_bW_d_B
             self.tau_tW_d_B = self.werkstoff.tau_tW_d_B
-            print(f"σ_zdW(d_B) = {self.sigma_zdW_d_B}")
-            print(f"σ_bW(d_B) = {self.sigma_bW_d_B}")
-            print(f"τ_tW(d_B) = {self.tau_tW_d_B}")
+            if zda:
+                print(f"σ_zdW(d_B) = {self.sigma_zdW_d_B}")
+            if ba:
+                print(f"σ_bW(d_B) = {self.sigma_bW_d_B}")
+            if ta:
+                print(f"τ_tW(d_B) = {self.tau_tW_d_B}")
 
             if not hasattr(self, "K_1B_d_eff"):
                 self.K_1B_d_eff = K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=True)
@@ -140,9 +150,12 @@ class Festigkeit:
                 self.K_2b_d = K_2_b(d=self.kerbe.d)
             if not hasattr(self, "K_2_d_t"):
                 self.K_2t_d = K_2_t(d=self.kerbe.d)
-            print(f"K_2zd(d) = {self.K_2zd_d}")
-            print(f"K_2b(d) = {self.K_2b_d}")
-            print(f"K_2t(d) = {self.K_2t_d}")
+            if zda:
+                print(f"K_2zd(d) = {self.K_2zd_d}")
+            if ba:
+                print(f"K_2b(d) = {self.K_2b_d}")
+            if ta:
+                print(f"K_2t(d) = {self.K_2t_d}")
 
             # 743-2 Abschnitt 7
             self.sigma_B_d_eff = self.K_1B_d_eff * self.sigma_B_d_B
@@ -158,8 +171,10 @@ class Festigkeit:
                 self.K_Fsigma = self.kerbe.K_Fsigma(Rz=self.Rz, sigma_B_d_eff=self.sigma_B_d_eff)
             if not hasattr(self, "K_Ftau"):
                 self.K_Ftau = self.kerbe.K_Ftau(Rz=self.Rz, sigma_B_d_eff=self.sigma_B_d_eff)
-            print(f"K_Fσ = {self.K_Fsigma}")
-            print(f"K_Fτ = {self.K_Ftau}")
+            if zda or ba:
+                print(f"K_Fσ = {self.K_Fsigma}")
+            if ta:
+                print(f"K_Fτ = {self.K_Ftau}")
 
             if not hasattr(self, "beta_sigma_zd"):
                 self.beta_sigma_zd = kerbe.beta_sigma_zd( sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
@@ -167,9 +182,12 @@ class Festigkeit:
                 self.beta_sigma_b = kerbe.beta_sigma_b(sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
             if not hasattr(self, "beta_tau"):
                 self.beta_tau = kerbe.beta_tau(sigma_B_d=self.sigma_B_d, sigma_S_d=self.sigma_S_d, harte_randschicht=self.harte_randschicht)
-            print(f"β_σzd = {self.beta_sigma_zd}")
-            print(f"β_σb = {self.beta_sigma_b}")
-            print(f"β_τ = {self.beta_tau}")
+            if zda:
+                print(f"β_σzd = {self.beta_sigma_zd}")
+            if ba:
+                print(f"β_σb = {self.beta_sigma_b}")
+            if ta:
+                print(f"β_τ = {self.beta_tau}")
   
             # Glg 8, 9
             if not hasattr(self, "K_sigma_zd"):
@@ -178,31 +196,42 @@ class Festigkeit:
                 self.K_sigma_b = (self.beta_sigma_b / self.K_2b_d + 1 / self.K_Fsigma - 1) / self.K_V
             if not hasattr(self, "K_tau"):
                 self.K_tau = (self.beta_tau / self.K_2t_d + 1 / self.K_Ftau - 1) / self.K_V
-            print(f"K_σzd = {self.K_sigma_zd}")
-            print(f"K_σb = {self.K_sigma_b}")
-            print(f"K_τ = {self.K_tau}")
+            if zda:
+                print(f"K_σzd = {self.K_sigma_zd}")
+            if ba:
+                print(f"K_σb = {self.K_sigma_b}")
+            if ta:
+                print(f"K_τ = {self.K_tau}")
 
             # Glg 5-7
             self.sigma_zdWK = self.sigma_zdW_d_B * self.K_1B_d_eff /self. K_sigma_zd
             self.sigma_bWK = self.sigma_bW_d_B * self.K_1B_d_eff / self.K_sigma_b
             self.tau_tWK = self.tau_tW_d_B * self.K_1B_d_eff / self.K_tau
-            print(f"σ_zdWK = {self.sigma_zdWK}")
-            print(f"σ_bWK = {self.sigma_bWK}")
-            print(f"τ_tWK = {self.tau_tWK}")
+            if zda:
+                print(f"σ_zdWK = {self.sigma_zdWK}")
+            if ba:
+                print(f"σ_bWK = {self.sigma_bWK}")
+            if ta:
+                print(f"τ_tWK = {self.tau_tWK}")
 
             # Glg 20-22
             self.psi_zdsigmaK = self.sigma_zdWK / (2 * self.K_1B_d_eff * self.sigma_B_d_B - self.sigma_zdWK)
             self.psi_bsigmaK = self.sigma_bWK / (2 * self.K_1B_d_eff * self.sigma_B_d_B - self.sigma_bWK)
             self.psi_tauK = self.tau_tWK / (2 * self.K_1B_d_eff * self.sigma_B_d_B - self.tau_tWK)
-            print(f"ψ_zdσK = {self.psi_zdsigmaK}")
-            print(f"ψ_bσK = {self.psi_bsigmaK}")
-            print(f"ψ_τK = {self.psi_tauK}")
-
+            if zda:
+                print(f"ψ_zdσK = {self.psi_zdsigmaK}")
+            if ba:
+                print(f"ψ_bσK = {self.psi_bsigmaK}")
+            if ta:
+                print(f"ψ_τK = {self.psi_tauK}")
+            
             # Glg 23, 24
             self.sigma_mv = m.sqrt((self.sigma_zdm + self.sigma_bm)**2 + 3 * self.tau_tm**2) 
             self.tau_mv = self.sigma_mv / m.sqrt(3)
-            print(f"σ_mv = {self.sigma_mv}")
-            print(f"τ_mv = {self.tau_mv}")
+            if zda or ba or ta:
+                print(f"σ_mv = {self.sigma_mv}")
+            if ta:
+                print(f"τ_mv = {self.tau_mv}")
 
             # Tabelle 2
             def gamma_F(beta_sigma):
@@ -220,9 +249,12 @@ class Festigkeit:
             self.gamma_Fzd = gamma_F(self.beta_sigma_zd)
             self.gamma_Fb = gamma_F(self.beta_sigma_b)
             self.gamma_Ft = 1.
-            print(f"γ_Fzd = {self.gamma_Fzd}")
-            print(f"γ_Fb = {self.gamma_Fb}")
-            print(f"γ_Ft = {self.gamma_Ft}")
+            if zda or zdmax:
+                print(f"γ_Fzd = {self.gamma_Fzd}")
+            if ba or bmax:
+                print(f"γ_Fb = {self.gamma_Fb}")
+            if ta or tmax:
+                print(f"γ_Ft = {self.gamma_Ft}")
 
             # K_2F, Tabelle 3, vernachlässigen der Hohlwelle
             if not hasattr(self, "K_2Fzd"):
@@ -231,17 +263,23 @@ class Festigkeit:
                 self.K_2Fb = 1.0 if self.harte_randschicht else 1.2
             if not hasattr(self, "K_2Ft"):
                 self.K_2Ft = 1.0 if self.harte_randschicht else 1.2
-            print(f"K_2Fzd = {self.K_2Fzd}")
-            print(f"K_2Fb = {self.K_2Fb}")
-            print(f"K_2Ft = {self.K_2Ft}")
+            if zda or zdmax:
+                print(f"K_2Fzd = {self.K_2Fzd}")
+            if ba or bmax:
+                print(f"K_2Fb = {self.K_2Fb}")
+            if ta or tmax:
+                print(f"K_2Ft = {self.K_2Ft}")
 
             # Glg 31, 32
             self.sigma_zdFK = self.K_1S_d_eff * self.K_2Fzd * self.gamma_Fzd * self.sigma_S_d_B
             self.sigma_bFK = self.K_1S_d_eff * self.K_2Fb * self.gamma_Fb * self.sigma_S_d_B
             self.tau_tFK = self.K_1S_d_eff * self.K_2Ft * self.gamma_Ft * self.sigma_S_d_B / m.sqrt(3)
-            print(f"σ_zdFK = {self.sigma_zdFK}")
-            print(f"σ_bFK = {self.sigma_bFK}")
-            print(f"τ_tFK = {self.tau_tFK}")
+            if zda or zdmax:
+                print(f"σ_zdFK = {self.sigma_zdFK}")
+            if ba or bmax:
+                print(f"σ_bFK = {self.sigma_bFK}")
+            if ta or tmax:
+                print(f"τ_tFK = {self.tau_tFK}")
     
             assert not (self.sigma_zdm + self.sigma_bm < 0)
             assert not (self.sigma_mv < 0)
@@ -254,9 +292,12 @@ class Festigkeit:
                 self.sigma_zdADK = ADK(self.sigma_mv, self.sigma_zdFK, self.sigma_zdWK, self.psi_zdsigmaK)
                 self.sigma_bADK = ADK(self.sigma_mv, self.sigma_bFK, self.sigma_bWK, self.psi_bsigmaK)
                 self.tau_tADK = ADK(self.tau_mv, self.tau_tFK, self.tau_tWK, self.psi_tauK)
-                print(f"σ_zdADK = {self.sigma_zdADK}")
-                print(f"σ_bADK = {self.sigma_bADK}")
-                print(f"τ_tADK = {self.tau_tADK}")
+                if zda:
+                    print(f"σ_zdADK = {self.sigma_zdADK}")
+                if ba:
+                    print(f"σ_bADK = {self.sigma_bADK}")
+                if ta:
+                    print(f"τ_tADK = {self.tau_tADK}")
             else:
                 def ADK(mv, a, FK, WK, psi):
                     if mv / a <= (FK - WK) / (WK - FK * psi):
@@ -266,23 +307,23 @@ class Festigkeit:
                         print(f"{mv / a} > {(FK - WK) / (WK - FK * psi)}")
                         return FK / (1 + mv / a)
             
-                if self.sigma_zda != 0:
+                if zda:
                     self.sigma_zdADK = ADK(self.sigma_mv, self.sigma_zda, self.sigma_zdFK, self.sigma_zdWK, self.psi_zdsigmaK)
                     print(f"σ_zdADK = {self.sigma_zdADK}")
-                if self.sigma_ba != 0:
+                if ba:
                     self.sigma_bADK = ADK(self.sigma_mv, self.sigma_ba, self.sigma_bFK, self.sigma_bWK, self.psi_bsigmaK)
                     print(f"σ_bADK = {self.sigma_bADK}")
-                if self.tau_ta != 0:
+                if ta:
                     self.tau_tADK = ADK(self.tau_mv, self.tau_ta, self.tau_tFK, self.tau_tWK, self.psi_tauK)
                     print(f"τ_tADK = {self.tau_tADK}")
 
             temp = 0
-            if self.sigma_zda != 0:
+            if zda:
                 temp += self.sigma_zda / self.sigma_zdADK
-            if self.sigma_ba != 0:
+            if ba:
                 temp += self.sigma_ba / self.sigma_bADK
             temp = temp**2
-            if self.tau_ta != 0:
+            if ta:
                 temp += (self.tau_ta / self.tau_tADK)**2
             if temp == 0:
                 print("\033[93mSicherheit gegen Dauerbruch nicht berechnet\033[0m")
@@ -293,12 +334,12 @@ class Festigkeit:
                     print("\033[91mSicherheit gegen Dauerbruch ist nicht erfuellt\033[0m")
 
             temp = 0
-            if self.sigma_zdmax:
+            if zdmax:
                 temp += self.sigma_zdmax / self.sigma_zdFK
-            if self.sigma_bmax != 0:
+            if bmax:
                 temp += self.sigma_bmax / self.sigma_bFK
             temp = temp**2
-            if self.tau_tmax != 0:
+            if tmax:
                 temp += (self.tau_tmax / self.tau_tFK)**2
             if temp == 0:
                 print("\033[93mSicherheit gegen bleibende Verformungen nicht berechnet\033[0m")
@@ -324,10 +365,62 @@ if __name__ == "__main__":
     werkstoff = Werkstoff.S500
 
 
-    print("Absatz 4")
+
+    print("Absatz 1")
     drehstarr = Festigkeit(fall = 2,
         werkstoff = werkstoff,
-        kerbe = Absatz(d = 56, r = 1, t = 2),
+        kerbe = Absatz(d = 60, r = 1, t = 5),
+        d_eff = 78,
+        F_zdm = 0, 
+        F_zda = 0, 
+        M_bm = 0,
+        M_ba = 135.977, 
+        M_tm = 2933.511,
+        M_ta = 0, 
+        Rz = 16,
+        K_A = 1.75,
+        K_S = 2.5,
+        K_V = 1,
+        harte_randschicht = False)
+
+    print("Absatz 2")
+    drehstarr = Festigkeit(fall = 2,
+        werkstoff = werkstoff,
+        kerbe = Absatz(d = 70, r = 1, t = 4),
+        d_eff = 78,
+        F_zdm = 0, 
+        F_zda = 0, 
+        M_bm = 0,
+        M_ba = 131.175, 
+        M_tm = 2933.511,
+        M_ta = 0, 
+        Rz = 16,
+        K_A = 1.75,
+        K_S = 2.5,
+        K_V = 1,
+        harte_randschicht = False)
+
+    print("Absatz 3")
+    drehstarr = Festigkeit(fall = 2,
+        werkstoff = werkstoff,
+        kerbe = Absatz(d = 60, r = 1, t = 9),
+        d_eff = 78,
+        F_zdm = 0, 
+        F_zda = 0, 
+        M_bm = 0,
+        M_ba = 6.003, 
+        M_tm = 2933.511,
+        M_ta = 0, 
+        Rz = 16,
+        K_A = 1.75,
+        K_S = 2.5,
+        K_V = 1,
+        harte_randschicht = False)
+
+    print("Freistrich 1")
+    drehstarr = Festigkeit(fall = 2,
+        werkstoff = werkstoff,
+        kerbe = Freistrich(d = 55.4, r = 1, t = 2.3),
         d_eff = 78,
         F_zdm = 0, 
         F_zda = 0, 
@@ -340,7 +433,6 @@ if __name__ == "__main__":
         K_S = 2.5,
         K_V = 1,
         harte_randschicht = False)
-    print()
 
 
 

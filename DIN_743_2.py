@@ -236,10 +236,13 @@ class Rundnut(AbsatzUndRundnut):
         return 0
 
     def G_zd_s(self, **kwargs):
+        print(f"\tϕ = {self.phi(**kwargs)}")
         return 2 * (1 + self.phi(**kwargs)) / self.r
     def G_b_s(self, **kwargs):
+        print(f"\tϕ = {self.phi(**kwargs)}")
         return 2 * (1 + self.phi(**kwargs)) / self.r
     def G_t_s(self, **kwargs):
+        print(f"\tϕ = {self.phi(**kwargs)}")
         return 1 / self.r
     
     def A_zd(self):
@@ -283,10 +286,13 @@ class Absatz(AbsatzUndRundnut):
         return 0
 
     def G_zd_s(self, **kwargs):
+        print(f"\tϕ = {self.phi(**kwargs)}")
         return 2.3 * (1 + self.phi(**kwargs)) / self.r
     def G_b_s(self, **kwargs):
+        print(f"\tϕ = {self.phi(**kwargs)}")
         return 2.3 * (1 + self.phi(**kwargs)) / self.r
     def G_t_s(self, **kwargs):
+        print(f"\tϕ = {self.phi(**kwargs)}")
         return 1.15 / self.r
 
     def A_zd(self):
