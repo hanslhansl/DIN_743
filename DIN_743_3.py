@@ -37,7 +37,7 @@ class Werkstoff:
             return 0.3 * self.sigma_B_d_B
         raise NotImplementedError
     
-    
+# Tabelle A.1
 Werkstoff.S185 = Werkstoff(Werkstoff.Art.Baustahl, 290, 185, 100, 16)
 Werkstoff.S235 = Werkstoff(Werkstoff.Art.Baustahl, 360, 235, 100, 16)
 Werkstoff.S275 = Werkstoff(Werkstoff.Art.Baustahl, 410, 275, 100, 16)
@@ -48,8 +48,17 @@ Werkstoff.E295 = Werkstoff(Werkstoff.Art.Baustahl, 470, 295, 100, 16)
 Werkstoff.E335 = Werkstoff(Werkstoff.Art.Baustahl, 570, 335, 100, 16)
 Werkstoff.E360 = Werkstoff(Werkstoff.Art.Baustahl, 670, 360, 100, 16)
 
+# Tabelle A.2
 Werkstoff.S275N = Werkstoff(Werkstoff.Art.schweißgeeigneterFeinkornbaustahl, 370, 275, 100, 16)
+Werkstoff.S275NL = Werkstoff(Werkstoff.Art.schweißgeeigneterFeinkornbaustahl, 370, 275, 100, 16)
+Werkstoff.S355N = Werkstoff(Werkstoff.Art.schweißgeeigneterFeinkornbaustahl, 470, 355, 100, 16)
+Werkstoff.S355NL = Werkstoff(Werkstoff.Art.schweißgeeigneterFeinkornbaustahl, 470, 355, 100, 16)
+Werkstoff.S420N = Werkstoff(Werkstoff.Art.schweißgeeigneterFeinkornbaustahl, 520, 420, 100, 16)
+Werkstoff.S420NL = Werkstoff(Werkstoff.Art.schweißgeeigneterFeinkornbaustahl, 520, 420, 100, 16)
+Werkstoff.S460N = Werkstoff(Werkstoff.Art.schweißgeeigneterFeinkornbaustahl, 540, 460, 100, 16)
+Werkstoff.S460NL = Werkstoff(Werkstoff.Art.schweißgeeigneterFeinkornbaustahl, 540, 460, 100, 16)
 
+# Tabelle A.3
 Werkstoff.C10E = Werkstoff(Werkstoff.Art.andererEinsatzstahl, 500, 310, 16, 16)
 Werkstoff._17Cr3 = Werkstoff(Werkstoff.Art.andererEinsatzstahl, 800, 545, 16, 16)
 Werkstoff._18CrMoS4 = Werkstoff(Werkstoff.Art.andererEinsatzstahl, 1100, 775, 16, 16)
@@ -57,6 +66,7 @@ Werkstoff._18CrNiMo7_6 = Werkstoff(Werkstoff.Art.CrNiMoEinsatzstahl, 1200, 850, 
 Werkstoff._16MnCr5 = Werkstoff(Werkstoff.Art.andererEinsatzstahl, 1000, 695, 16, 16)
 Werkstoff._20MnCr5 = Werkstoff(Werkstoff.Art.andererEinsatzstahl, 1200, 850, 16, 16)
 
+# Tabelle A.4
 Werkstoff.C25 = Werkstoff(Werkstoff.Art.vergüteterStahl, 550, 370, 16, 16)
 Werkstoff.C30 = Werkstoff(Werkstoff.Art.vergüteterStahl, 600, 400, 16, 16)
 Werkstoff.C35 = Werkstoff(Werkstoff.Art.vergüteterStahl, 630, 430, 16, 16)
@@ -73,5 +83,15 @@ Werkstoff._36CrNiMo4 = Werkstoff(Werkstoff.Art.vergüteterStahl, 1100, 900, 16, 
 Werkstoff._30CrNiMo8 = Werkstoff(Werkstoff.Art.vergüteterStahl, 1030, 850, 16, 16)
 Werkstoff._34CrNiMo6 = Werkstoff(Werkstoff.Art.vergüteterStahl, 1200, 1000, 16, 16)
 
+# Tabelle A.5
 Werkstoff._32CrAlMo7_10 = Werkstoff(Werkstoff.Art.Nitrierstahl, 800, 600, 100, 100)
 Werkstoff._34CrAlMo5_10 = Werkstoff(Werkstoff.Art.Nitrierstahl, 800, 700, 100, 100)
+Werkstoff._41CrAlMo7_10 = Werkstoff(Werkstoff.Art.Nitrierstahl, 850, 650, 100, 100)
+Werkstoff._34CrAlNi7_10 = Werkstoff(Werkstoff.Art.Nitrierstahl, 900, 800, 100, 100)
+Werkstoff._8CrMo16_5 = Werkstoff(Werkstoff.Art.Nitrierstahl, 900, 720, 100, 100)
+Werkstoff._24CrMo13_6 = Werkstoff(Werkstoff.Art.Nitrierstahl, 900, 720, 100, 100)
+Werkstoff._31CrMo12 = Werkstoff(Werkstoff.Art.Nitrierstahl, 980, 785, 100, 100)
+Werkstoff._20CrMoV5_7 = Werkstoff(Werkstoff.Art.Nitrierstahl, 900, 800, 100, 100)
+Werkstoff._31CrMoV9 = Werkstoff(Werkstoff.Art.Nitrierstahl, 1000, 800, 100, 100)
+Werkstoff._33CrMoV12_9 = Werkstoff(Werkstoff.Art.Nitrierstahl, 1050, 850, 100, 100)
+Werkstoff._40CrMoV13_9 = Werkstoff(Werkstoff.Art.Nitrierstahl, 900, 720, 100, 100)

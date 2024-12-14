@@ -43,9 +43,9 @@ def enable_virtual_terminal_processing():
         if not SetConsoleMode(hOut, dwMode):
             raise ctypes.WinError(ctypes.get_last_error())
 
-        print("Virtual Terminal Processing wurde aktiviert.")
+        print("Virtual Terminal Processing wurde aktiviert.\n")
     except WindowsError as e:
-        print(f"Fehler: {e}")
+        print(f"Fehler: {e}\n")
 
 
 class Festigkeit:
@@ -379,9 +379,11 @@ class Festigkeit:
 
 
 def test():
+    _print = print
     _print = lambda *_, **__: None
     print_all = False
 
+    _print("MEL1 2024W #1")
     MEL1_2024W_1 = Festigkeit(fall = 1,
         werkstoff = Werkstoff._50CrMo4,
         kerbe = Absatz(84, 4, 8),
@@ -402,7 +404,8 @@ def test():
         print_all=print_all)
     assert 2.3725 <= MEL1_2024W_1.S_Dauer <= 2.3735
     assert 1.4635 <= MEL1_2024W_1.S_Verform <= 1.4645
-
+    
+    _print("MEL1 2024W #2")
     MEL1_2024W_2 = Festigkeit(fall = 2,
         werkstoff = Werkstoff.C50,
         kerbe = Passfeder(60, 1),
@@ -424,6 +427,7 @@ def test():
     assert 1.4715 <= MEL1_2024W_2.S_Dauer <= 1.4725
     assert 2.5675 <= MEL1_2024W_2.S_Verform <= 2.5685
     
+    _print("MEL1 2024W #4")
     MEL1_2024W_4 = Festigkeit(fall = 2,
         werkstoff = Werkstoff.S235,
         kerbe = Spitzkerbe(60, 10),
@@ -443,7 +447,8 @@ def test():
         _print=_print,
         print_all=print_all)
     assert 0.2735 <= MEL1_2024W_4.S_Verform <= 0.2745
-
+    
+    _print("MEL1 2022W")
     MEL1_2022W = Festigkeit(fall = 2,
         werkstoff = Werkstoff.E335,
         kerbe = Querbohrung(50, 2),
@@ -465,11 +470,11 @@ def test():
     assert 1.1045 <= MEL1_2022W.S_Dauer <= 1.1055
     assert 1.6065 <= MEL1_2022W.S_Verform <= 1.6075
 
-
     return
 
 if __name__ == "__main__":
-    enable_virtual_terminal_processing()
+    if os.name == 'nt':
+        enable_virtual_terminal_processing()
 
 
     test()
