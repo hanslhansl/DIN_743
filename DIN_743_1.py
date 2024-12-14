@@ -1,7 +1,6 @@
 import math as m, sys, os
 from typing import Literal, Optional
-from DIN_743_2 import *
-from DIN_743_3 import *
+import DIN_743_2, DIN_743_3
 
 
 def enable_virtual_terminal_processing():
@@ -50,9 +49,9 @@ def enable_virtual_terminal_processing():
 
 class Festigkeit:
     def __init__(self,
-                fall : Literal[1] | Literal[2],
-                werkstoff : Werkstoff,
-                kerbe : Kerbe,
+                fall : Literal[1, 2],
+                werkstoff : DIN_743_3.Werkstoff,
+                kerbe : DIN_743_2.Kerbe,
                 d_eff : float,
                 F_zdm : float, F_zda : float, F_zdmax : float, M_bm : float, M_ba : float, M_bmax : float, M_tm : float, M_ta : float, M_tmax : float,
                 Rz : float,
@@ -157,18 +156,18 @@ class Festigkeit:
             _print(f"τ_tW(d_B) = {self.tau_tW_d_B}")
 
         if self.K_1B_d_eff == None:
-            self.K_1B_d_eff = K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=True)
+            self.K_1B_d_eff = DIN_743_2.K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=True)
         if self.K_1S_d_eff == None:
-            self.K_1S_d_eff = K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=False)
+            self.K_1S_d_eff = DIN_743_2.K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=False)
         _print(f"K_1B(d_eff) = {self.K_1B_d_eff}")
         _print(f"K_1S(d_eff) = {self.K_1S_d_eff}")
 
         if self.K_2zd_d == None:
-            self.K_2zd_d = K_2_zd(d=self.kerbe.d)
+            self.K_2zd_d = DIN_743_2.K_2_zd(d=self.kerbe.d)
         if self.K_2b_d == None:
-            self.K_2b_d = K_2_b(d=self.kerbe.d)
+            self.K_2b_d = DIN_743_2.K_2_b(d=self.kerbe.d)
         if self.K_2t_d == None:
-            self.K_2t_d = K_2_t(d=self.kerbe.d)
+            self.K_2t_d = DIN_743_2.K_2_t(d=self.kerbe.d)
         if zda:
             _print(f"K_2zd(d) = {self.K_2zd_d}")
         if ba:
@@ -384,8 +383,8 @@ def test():
 
     _print("MEL1 2024W #1")
     MEL1_2024W_1 = Festigkeit(fall = 1,
-        werkstoff = Werkstoff._50CrMo4,
-        kerbe = Absatz(84, 4, 8),
+        werkstoff = DIN_743_3._50CrMo4,
+        kerbe = DIN_743_2.Absatz(84, 4, 8),
         d_eff = 100,
         F_zdm = 443341.5553,
         F_zda = 0,
@@ -406,8 +405,8 @@ def test():
     
     _print("MEL1 2024W #2")
     MEL1_2024W_2 = Festigkeit(fall = 2,
-        werkstoff = Werkstoff.C50,
-        kerbe = Passfeder(60, 1),
+        werkstoff = DIN_743_3.C50,
+        kerbe = DIN_743_2.Passfeder(60, 1),
         d_eff = 80,
         F_zdm = 0,
         F_zda = 0,
@@ -428,8 +427,8 @@ def test():
     
     _print("MEL1 2024W #4")
     MEL1_2024W_4 = Festigkeit(fall = 2,
-        werkstoff = Werkstoff.S235,
-        kerbe = Spitzkerbe(60, 10),
+        werkstoff = DIN_743_3.S235,
+        kerbe = DIN_743_2.Spitzkerbe(60, 10),
         d_eff = 80,
         F_zdm = 40000,
         F_zda = 0,
@@ -449,8 +448,8 @@ def test():
     
     _print("MEL1 2022W")
     MEL1_2022W = Festigkeit(fall = 2,
-        werkstoff = Werkstoff.E335,
-        kerbe = Querbohrung(50, 2),
+        werkstoff = DIN_743_3.E335,
+        kerbe = DIN_743_2.Querbohrung(50, 2),
         d_eff = 80,
         F_zdm = 0,
         F_zda = 0,
@@ -481,7 +480,7 @@ if __name__ == "__main__":
 
     sys.exit()
 
-    werkstoff = Werkstoff.S500
+    werkstoff = DIN_743_3.S500
     K_A = 1.75
     K_S = 2.5
 

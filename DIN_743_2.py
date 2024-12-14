@@ -1,7 +1,7 @@
 import math as m
 from abc import abstractmethod
 from dataclasses import dataclass
-from DIN_743_3 import *
+import DIN_743_3
 
 
 
@@ -329,20 +329,20 @@ class Querbohrung(BekannteFormzahl):
         return M_t / (m.pi * self.d**3 / 16 - self.r * self.d**2 / 3) * 1000
 
 
-def K_1(werkstoff: Werkstoff, d_eff, zugfestigkeit : bool):
+def K_1(werkstoff: DIN_743_3.Werkstoff, d_eff, zugfestigkeit : bool):
     """
     Glg 10-14
     zugfestigkeit: True für sigma_B, False für sigma_S
     """
     streckgrenze = not zugfestigkeit
-    if werkstoff.art == Werkstoff.Art.Nitrierstahl or zugfestigkeit and werkstoff.art == Werkstoff.Art.Baustahl:
+    if werkstoff.art == DIN_743_3.Werkstoff.Art.Nitrierstahl or zugfestigkeit and werkstoff.art == DIN_743_3.Werkstoff.Art.Baustahl:
         if d_eff <= 100:
             return 1.
         elif d_eff < 300:
             return 1 - 0.23 * m.log(d_eff / 100, 10)
         elif d_eff <= 500:
             return 0.89
-    elif streckgrenze and werkstoff.art == Werkstoff.Art.Baustahl:
+    elif streckgrenze and werkstoff.art == DIN_743_3.Werkstoff.Art.Baustahl:
         if d_eff <= 32:
             return 1.
         elif d_eff < 300:
@@ -350,7 +350,7 @@ def K_1(werkstoff: Werkstoff, d_eff, zugfestigkeit : bool):
             return 1 - 0.26 * m.log(d_eff / 2 / d_B, 10)
         elif d_eff <= 500:
             return 0.75
-    elif werkstoff.art == Werkstoff.Art.CrNiMoEinsatzstahl or zugfestigkeit and Werkstoff.Art.vergüteterStahl:
+    elif werkstoff.art == DIN_743_3.Werkstoff.Art.CrNiMoEinsatzstahl or zugfestigkeit and DIN_743_3.Werkstoff.Art.vergüteterStahl:
         d_B = 16
         if d_eff <= 16:
             return 1.
@@ -358,7 +358,7 @@ def K_1(werkstoff: Werkstoff, d_eff, zugfestigkeit : bool):
             return 1 - 0.26 * m.log(d_eff / d_B, 10)
         elif d_eff <= 500:
             return 0.67
-    elif werkstoff.art == Werkstoff.Art.andererEinsatzstahl:
+    elif werkstoff.art == DIN_743_3.Werkstoff.Art.andererEinsatzstahl:
         if d_eff <= 16:
             return 1.
         elif d_eff < 150:
@@ -366,7 +366,7 @@ def K_1(werkstoff: Werkstoff, d_eff, zugfestigkeit : bool):
             return 1 - 0.41 * m.log(d_eff / d_B, 10)
         elif d_eff <= 500:
             return 0.6
-    elif werkstoff.art == Werkstoff.Art.vergüteterStahl:
+    elif werkstoff.art == DIN_743_3.Werkstoff.Art.vergüteterStahl:
         d_B = 16
         if d_eff <= 16:
             return 1.
