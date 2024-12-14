@@ -10,11 +10,11 @@ class Kerbe:
     d : float
     """Bauteildurchmesser im Kerbquerschnitt """
 
-    def sigma_zd(self, F_zd):
+    def sigma_zd(self, F_zd : float) -> float:
         return F_zd / (m.pi / 4 * self.d**2)
-    def sigma_b(self, M_b):
+    def sigma_b(self, M_b : float) -> float:
         return M_b / (m.pi / 32 * self.d**3) * 1000
-    def tau_t(self, M_t):
+    def tau_t(self, M_t : float) -> float:
         return M_t / (m.pi / 16 * self.d**3) * 1000
 
     def __post_init__(self):

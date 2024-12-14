@@ -377,7 +377,6 @@ class Festigkeit:
     pass
 
 
-
 def test():
     _print = print
     _print = lambda *_, **__: None
@@ -471,6 +470,7 @@ def test():
     assert 1.6065 <= MEL1_2022W.S_Verform <= 1.6075
 
     return
+
 
 if __name__ == "__main__":
     if os.name == 'nt':
