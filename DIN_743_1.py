@@ -378,7 +378,7 @@ class Festigkeit:
 
 def test():
     _print = print
-    _print = lambda *_, **__: None
+    #_print = lambda *_, **__: None
     print_all = False
 
     _print("MEL1 2024W #1")
