@@ -1,6 +1,6 @@
 
 """
-Implementiert die DIN 743 zur Tragf‰higkeitsberechnung von Wellen und Achsen.
+Implementiert die DIN 743 zur Tragf√§higkeitsberechnung von Wellen und Achsen.
 
 Siehe https://github.com/hanslhansl/DIN_743.
 """

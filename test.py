@@ -1,10 +1,10 @@
 import DIN_743
 
 
-_print = print
-#_print = lambda *_, **__: None
+_print = print #lambda *_, **__: None
 _assert = False
 print_all = False
+
 
 _print("MEL1 2024W #1")
 MEL1_2024W_1 = DIN_743.Festigkeit(fall = 1,
