@@ -9,3 +9,7 @@ Siehe https://github.com/hanslhansl/DIN_743.
 from .DIN_743_1 import *
 from .DIN_743_2 import *
 from .DIN_743_3 import *
+
+# enable colored console output on windows
+import colorama as _colorama
+_colorama.just_fix_windows_console()

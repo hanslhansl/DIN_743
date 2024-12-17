@@ -1,9 +1,8 @@
 from DIN_743 import *
 
-import DIN_743
-print(dir(DIN_743))
 
-werkstoff = S500
+
+werkstoff = DIN_743_3.S500
 K_A = 1.75
 K_S = 2.5
 
