@@ -1,6 +1,13 @@
 from dataclasses import dataclass
 from enum import IntEnum
 
+__all__ = ["Werkstoff", 
+              "S185", "S235", "S275", "S355", "S450", "S500", "E295", "E335", "E360",
+              "S275N", "S275NL", "S355N", "S355NL", "S420N", "S420NL", "S460N", "S460NL",
+              "C10E", "_17Cr3", "_18CrMoS4", "_18CrNiMo7_6", "_16MnCr5", "_20MnCr5",
+              "C25", "C30", "C35", "C40", "C45", "C50", "C55", "C60", "_41Cr4", "_34CrMo4", "_42CrMo4", "_50CrMo4", "_36CrNiMo4", "_30CrNiMo8", "_34CrNiMo6",
+              "_32CrAlMo7_10", "_34CrAlMo5_10", "_41CrAlMo7_10", "_34CrAlNi7_10", "_8CrMo16_5", "_24CrMo13_6", "_31CrMo12", "_20CrMoV5_7", "_31CrMoV9", "_33CrMoV12_9", "_40CrMoV13_9"
+           ]
 
 @dataclass
 class Werkstoff:
@@ -37,6 +44,7 @@ class Werkstoff:
             return 0.3 * self.sigma_B_d_B
         raise NotImplementedError
     
+
 # Tabelle A.1
 S185 = Werkstoff(Werkstoff.Art.Baustahl, 290, 185, 100, 16)
 S235 = Werkstoff(Werkstoff.Art.Baustahl, 360, 235, 100, 16)
