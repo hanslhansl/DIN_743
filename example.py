@@ -1,7 +1,6 @@
 from DIN_743 import *
 
 
-
 werkstoff = DIN_743_3.S500
 K_A = 1.75
 K_S = 2.5
@@ -9,7 +8,7 @@ K_S = 2.5
 print("Passfeder Lamellenkupplung")
 lamellenkupplung = Festigkeit(fall = 2,
     werkstoff = werkstoff,
-    kerbe = Passfeder(d = 30, i = 2),
+    kerbe = DIN_743_2.Passfeder(d = 30, i = 2),
     d_eff = 56,
     F_zdm = 0,
     F_zda = 0,
@@ -33,7 +32,7 @@ assert l >= r
 print("Passfeder Ritzel")
 ritzel = Festigkeit(fall = 2,
     werkstoff = lamellenkupplung.werkstoff,
-    kerbe = Passfeder(d = 50, i = 1),
+    kerbe = DIN_743_2.Passfeder(d = 50, i = 1),
     d_eff = 56,
     F_zdm = 0,
     F_zda = 0,
@@ -57,7 +56,7 @@ assert l >= r
 print("Passfeder Rad")
 rad = Festigkeit(fall = 2,
     werkstoff = werkstoff,
-    kerbe = Passfeder(d = 70, i = 2),
+    kerbe = DIN_743_2.Passfeder(d = 70, i = 2),
     d_eff = 78,
     F_zdm = 0,
     F_zda = 0,
@@ -81,7 +80,7 @@ assert l >= r
 print("Passfeder drehstarre Kupplung")
 drehstarr = Festigkeit(fall = 2,
     werkstoff = rad.werkstoff,
-    kerbe = Passfeder(d = 55, i = 2),
+    kerbe = DIN_743_2.Passfeder(d = 55, i = 2),
     d_eff = 78,
     F_zdm = 0, 
     F_zda = 0, 
@@ -105,7 +104,7 @@ assert l >= r
 print("Absatz 1")
 absatz1 = Festigkeit(fall = 2,
     werkstoff = werkstoff,
-    kerbe = Absatz(d = 60, r = 1, t = 5),
+    kerbe = DIN_743_2.Absatz(d = 60, r = 1, t = 5),
     d_eff = 78,
     F_zdm = 0, 
     F_zda = 0,
@@ -123,7 +122,7 @@ absatz1 = Festigkeit(fall = 2,
 print("Absatz 2")
 absatz2 = Festigkeit(fall = 2,
     werkstoff = werkstoff,
-    kerbe = Absatz(d = 70, r = 1, t = 4),
+    kerbe = DIN_743_2.Absatz(d = 70, r = 1, t = 4),
     d_eff = 78,
     F_zdm = 0,
     F_zda = 0,
@@ -141,7 +140,7 @@ absatz2 = Festigkeit(fall = 2,
 print("Absatz 3")
 absatz3 = Festigkeit(fall = 2,
     werkstoff = werkstoff,
-    kerbe = Absatz(d = 60, r = 1, t = 9),
+    kerbe = DIN_743_2.Absatz(d = 60, r = 1, t = 9),
     d_eff = 78,
     F_zdm = 0,
     F_zda = 0,
@@ -159,7 +158,7 @@ absatz3 = Festigkeit(fall = 2,
 print("Freistrich 1")
 freistrich1 = Festigkeit(fall = 2,
     werkstoff = werkstoff,
-    kerbe = Freistrich(d = 55.4, r = 1, t = 2.3),
+    kerbe = DIN_743_2.Freistrich(d = 55.4, r = 1, t = 2.3),
     d_eff = 78,
     F_zdm = 0,
     F_zda = 0,

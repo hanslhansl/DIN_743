@@ -1,18 +1,16 @@
-
+from DIN_743 import *
 
 
 def test_DIN_743():
-    import DIN_743
-
     _print = print #lambda *_, **__: None
     _assert = False
     print_all = True
 
 
     _print("MEL1 2024W #1")
-    MEL1_2024W_1 = DIN_743.Festigkeit(fall = 1,
-        werkstoff = DIN_743._50CrMo4,
-        kerbe = DIN_743.Absatz(84, 4, 8),
+    MEL1_2024W_1 = Festigkeit(fall = 1,
+        werkstoff = DIN_743_3._50CrMo4,
+        kerbe = DIN_743_2.Absatz(84, 4, 8),
         d_eff = 100,
         F_zdm = 443341.5553,
         F_zda = 0,
@@ -32,9 +30,9 @@ def test_DIN_743():
     assert 1.4635 <= MEL1_2024W_1.S_Verform <= 1.4645
     
     _print("MEL1 2024W #2")
-    MEL1_2024W_2 = DIN_743.Festigkeit(fall = 2,
-        werkstoff = DIN_743.C50,
-        kerbe = DIN_743.Passfeder(60, 1),
+    MEL1_2024W_2 = Festigkeit(fall = 2,
+        werkstoff = DIN_743_3.C50,
+        kerbe = DIN_743_2.Passfeder(60, 1),
         d_eff = 80,
         F_zdm = 0,
         F_zda = 0,
@@ -54,9 +52,9 @@ def test_DIN_743():
     assert 2.5675 <= MEL1_2024W_2.S_Verform <= 2.5685
     
     _print("MEL1 2024W #4")
-    MEL1_2024W_4 = DIN_743.Festigkeit(fall = 2,
-        werkstoff = DIN_743.S235,
-        kerbe = DIN_743.Spitzkerbe(60, 10),
+    MEL1_2024W_4 = Festigkeit(fall = 2,
+        werkstoff = DIN_743_3.S235,
+        kerbe = DIN_743_2.Spitzkerbe(60, 10),
         d_eff = 80,
         F_zdm = 40000,
         F_zda = 0,
@@ -75,9 +73,9 @@ def test_DIN_743():
     assert 0.2735 <= MEL1_2024W_4.S_Verform <= 0.2745
     
     _print("MEL1 2022W")
-    MEL1_2022W = DIN_743.Festigkeit(fall = 2,
-        werkstoff = DIN_743.E335,
-        kerbe = DIN_743.Querbohrung(50, 2),
+    MEL1_2022W = Festigkeit(fall = 2,
+        werkstoff = DIN_743_3.E335,
+        kerbe = DIN_743_2.Querbohrung(50, 2),
         d_eff = 80,
         F_zdm = 0,
         F_zda = 0,

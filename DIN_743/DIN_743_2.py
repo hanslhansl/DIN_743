@@ -2,11 +2,6 @@ import math as m
 from dataclasses import dataclass
 from . import DIN_743_3
 
-__all__ = ["Kerbe",
-           "Passfeder", "Presssitz", "Spitzkerbe", "UmlaufendeRechtecknut",
-           "Rundnut", "Absatz", "Freistrich", "Querbohrung",
-           "K_1", "K_2_zd", "K_2_b", "K_2_t", "K_3"]
-
 
 @dataclass
 class Kerbe:
