@@ -1,12 +1,11 @@
 from DIN_743 import *
 
-
-def test_DIN_743():
-    _print = print #lambda *_, **__: None
-    _assert = False
-    print_all = True
+_print = print #lambda *_, **__: None
+_assert = False
+print_all = True
 
 
+def test_MEL1_2024W_1():
     _print("MEL1 2024W #1")
     MEL1_2024W_1 = Festigkeit(fall = 1,
         werkstoff = DIN_743_3._50CrMo4,
@@ -29,6 +28,7 @@ def test_DIN_743():
     assert 2.3725 <= MEL1_2024W_1.S_Dauer <= 2.3735
     assert 1.4635 <= MEL1_2024W_1.S_Verform <= 1.4645
     
+def test_MEL1_2024W_2():
     _print("MEL1 2024W #2")
     MEL1_2024W_2 = Festigkeit(fall = 2,
         werkstoff = DIN_743_3.C50,
@@ -51,6 +51,7 @@ def test_DIN_743():
     assert 1.4715 <= MEL1_2024W_2.S_Dauer <= 1.4725
     assert 2.5675 <= MEL1_2024W_2.S_Verform <= 2.5685
     
+def test_MEL1_2024W_4():
     _print("MEL1 2024W #4")
     MEL1_2024W_4 = Festigkeit(fall = 2,
         werkstoff = DIN_743_3.S235,
@@ -72,6 +73,7 @@ def test_DIN_743():
         print_all=print_all)
     assert 0.2735 <= MEL1_2024W_4.S_Verform <= 0.2745
     
+def test_MEL1_2022W():
     _print("MEL1 2022W")
     MEL1_2022W = Festigkeit(fall = 2,
         werkstoff = DIN_743_3.E335,
@@ -96,5 +98,7 @@ def test_DIN_743():
     assert 1.6065 <= MEL1_2022W.S_Verform <= 1.6075
 
 
-
-test_DIN_743()
+test_MEL1_2024W_1()
+test_MEL1_2024W_2()
+test_MEL1_2024W_4()
+test_MEL1_2022W()

@@ -73,7 +73,6 @@ class Festigkeit:
         Im Druckbereich sind sigma_zdm und sigma_bm negativ
         - d_eff: für die Wärmebehandlung maßgebender Durchmesser
         """
-        
         assert(fall in (1, 2))
 
         self.fall = fall
@@ -145,9 +144,9 @@ class Festigkeit:
             _print(f"τ_tW(d_B) = {self.tau_tW_d_B}")
 
         if self.K_1B_d_eff == None:
-            self.K_1B_d_eff = DIN_743_2.K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=True)
+            self.K_1B_d_eff = DIN_743_2.K_1(werkstoff_art=self.werkstoff.art, d_eff=self.d_eff, zugfestigkeit=True)
         if self.K_1S_d_eff == None:
-            self.K_1S_d_eff = DIN_743_2.K_1(werkstoff=self.werkstoff, d_eff=self.d_eff, zugfestigkeit=False)
+            self.K_1S_d_eff = DIN_743_2.K_1(werkstoff_art=self.werkstoff.art, d_eff=self.d_eff, zugfestigkeit=False)
         _print(f"K_1B(d_eff) = {self.K_1B_d_eff}")
         _print(f"K_1S(d_eff) = {self.K_1S_d_eff}")
 
