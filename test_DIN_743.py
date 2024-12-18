@@ -96,9 +96,3 @@ def test_MEL1_2022W():
         print_all=print_all)
     assert 1.1045 <= MEL1_2022W.S_Dauer <= 1.1055
     assert 1.6065 <= MEL1_2022W.S_Verform <= 1.6075
-
-
-test_MEL1_2024W_1()
-test_MEL1_2024W_2()
-test_MEL1_2024W_4()
-test_MEL1_2022W()
